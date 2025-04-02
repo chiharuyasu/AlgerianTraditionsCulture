@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Algerian Traditions &amp; Culture</string>
+
+    <!-- Categories -->
+    <string name="category_traditional_clothing">Traditional Clothing</string>
+    <string name="category_festivals">Festivals &amp; Celebrations</string>
+    <string name="category_food">Food &amp; Cuisine</string>
+    <string name="category_marriage">Marriage Customs</string>
+    <string name="category_landmarks">Historical Landmarks</string>
+    <string name="category_proverbs">Popular Sayings &amp; Proverbs</string>
+
+    <!-- Category Descriptions -->
+    <string name="category_clothing_desc">Discover the rich variety of traditional Algerian clothing</string>
+    <string name="category_festivals_desc">Explore the vibrant festivals and celebrations of Algeria</string>
+    <string name="category_food_desc">Taste the authentic flavors of Algerian cuisine</string>
+    <string name="category_marriage_desc">Learn about traditional Algerian marriage customs</string>
+    <string name="category_landmarks_desc">Visit the historical landmarks of Algeria</string>
+    <string name="category_proverbs_desc">Discover the wisdom of Algerian proverbs</string>
+
+    <!-- Menu Items -->
+    <string name="action_favorites">Favorites</string>
+    <string name="action_search">Search</string>
+    <string name="action_share">Share</string>
+
+    <!-- Labels -->
+    <string name="label_historical_background">Historical Background</string>
+    <string name="label_location">Location</string>
+    <string name="label_play">Play</string>
+    <string name="label_pause">Pause</string>
+
+    <!-- Messages -->
+    <string name="msg_added_to_favorites">Added to favorites</string>
+    <string name="msg_removed_from_favorites">Removed from favorites</string>
+    <string name="msg_share_tradition">Share Tradition</string>
+    <string name="msg_search_coming_soon">Search feature coming soon!</string>
+    <string name="msg_favorites_coming_soon">Favorites feature coming soon!</string>
+
+    <!-- Error Messages -->
+    <string name="error_loading_data">Error loading data. Please try again.</string>
+    <string name="error_no_internet">No internet connection. Please check your connection and try again.</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#006233</color>  <!-- Green representing Algeria's flag -->
+    <color name="primary_dark">#004d26</color>
+    <color name="primary_light">#4d8c73</color>
+    <color name="accent">#e31e24</color>  <!-- Red representing Algeria's flag -->
+    <color name="accent_dark">#b3181d</color>
+    <color name="accent_light">#e94b50</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#757575</color>
+    <color name="light_gray">#BDBDBD</color>
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="error">#B00020</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider">#BDBDBD</color>
+</resources>
