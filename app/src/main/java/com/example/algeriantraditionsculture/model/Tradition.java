@@ -2,102 +2,83 @@ package com.example.algeriantraditionsculture.model;
 
 public class Tradition {
     private int id;
-    private int categoryId;
     private String title;
     private String description;
     private String historicalBackground;
-    private int imageResourceId;
+    private String imageUrl;
     private String videoUrl;
     private String audioUrl;
-    private String location;
     private boolean isFavorite;
+    private String region;  // Algerian region where the tradition is practiced
+    private String season;  // Season or time of year when the tradition is celebrated
+    private String[] ingredients;  // For food traditions
+    private String[] steps;  // For traditions with specific steps or rituals
+    private String[] relatedTraditions;  // Related traditions or customs
 
-    public Tradition(int id, int categoryId, String title, String description, 
-                    String historicalBackground, int imageResourceId, 
-                    String videoUrl, String audioUrl, String location) {
+    public Tradition(int id, String title, String description, String historicalBackground,
+                    String imageUrl, String videoUrl, String audioUrl, String region,
+                    String season, String[] ingredients, String[] steps, String[] relatedTraditions) {
         this.id = id;
-        this.categoryId = categoryId;
         this.title = title;
         this.description = description;
         this.historicalBackground = historicalBackground;
-        this.imageResourceId = imageResourceId;
+        this.imageUrl = imageUrl;
         this.videoUrl = videoUrl;
         this.audioUrl = audioUrl;
-        this.location = location;
+        this.region = region;
+        this.season = season;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.relatedTraditions = relatedTraditions;
         this.isFavorite = false;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getHistoricalBackground() {
         return historicalBackground;
     }
 
-    public void setHistoricalBackground(String historicalBackground) {
-        this.historicalBackground = historicalBackground;
-    }
-
-    public int getImageResourceId() {
-        return imageResourceId;
-    }
-
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getVideoUrl() {
         return videoUrl;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
-
     public String getAudioUrl() {
         return audioUrl;
     }
 
-    public void setAudioUrl(String audioUrl) {
-        this.audioUrl = audioUrl;
+    public String getRegion() {
+        return region;
     }
 
-    public String getLocation() {
-        return location;
+    public String getSeason() {
+        return season;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public String[] getIngredients() {
+        return ingredients;
+    }
+
+    public String[] getSteps() {
+        return steps;
+    }
+
+    public String[] getRelatedTraditions() {
+        return relatedTraditions;
     }
 
     public boolean isFavorite() {

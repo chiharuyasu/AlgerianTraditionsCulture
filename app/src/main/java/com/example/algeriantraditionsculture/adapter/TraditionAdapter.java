@@ -1,5 +1,7 @@
 package com.example.algeriantraditionsculture.adapter;
 
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.algeriantraditionsculture.R;
 import com.example.algeriantraditionsculture.model.Tradition;
 
@@ -53,8 +60,25 @@ public class TraditionAdapter extends RecyclerView.Adapter<TraditionAdapter.Trad
         );
 
         Glide.with(holder.itemView.getContext())
-                .load(currentTradition.getImageResourceId())
+                .load(currentTradition.getImageUrl())
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
                 .centerCrop()
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        if (e != null) {
+                            Log.e("TraditionAdapter", "Image loading failed: " + e.getMessage());
+                            e.logRootCauses("TraditionAdapter");
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
                 .into(holder.traditionImage);
     }
 

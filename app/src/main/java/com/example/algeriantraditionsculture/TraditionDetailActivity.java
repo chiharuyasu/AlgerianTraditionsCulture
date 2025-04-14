@@ -15,18 +15,32 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.algeriantraditionsculture.adapter.IngredientsAdapter;
+import com.example.algeriantraditionsculture.adapter.StepsAdapter;
+import com.example.algeriantraditionsculture.adapter.RelatedTraditionsAdapter;
 import com.example.algeriantraditionsculture.model.Tradition;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.IOException;
+import android.content.res.AssetFileDescriptor;
+import android.util.Log;
 
 public class TraditionDetailActivity extends AppCompatActivity {
     private ImageView traditionImage;
     private TextView traditionTitle;
     private TextView traditionDescription;
     private TextView historicalBackground;
-    private ImageButton btnFavorite;
-    private ImageButton btnShare;
+    private ExtendedFloatingActionButton fabShare;
     private VideoView videoPlayer;
+    private FloatingActionButton fabPlayVideo;
+    private MaterialCardView historicalCard;
+    private MaterialCardView audioCard;
     private LinearLayout audioPlayer;
     private ImageButton btnPlayAudio;
     private SeekBar audioSeekBar;
@@ -34,6 +48,20 @@ public class TraditionDetailActivity extends AppCompatActivity {
     private Tradition tradition;
     private int categoryId;
     private String categoryName;
+    private boolean isVideoPlaying = false;
+    private MaterialCardView regionCard;
+    private MaterialCardView seasonCard;
+    private MaterialCardView ingredientsCard;
+    private MaterialCardView stepsCard;
+    private MaterialCardView relatedTraditionsCard;
+    private TextView regionText;
+    private TextView seasonText;
+    private RecyclerView ingredientsRecyclerView;
+    private RecyclerView stepsRecyclerView;
+    private RecyclerView relatedTraditionsRecyclerView;
+    private IngredientsAdapter ingredientsAdapter;
+    private StepsAdapter stepsAdapter;
+    private RelatedTraditionsAdapter relatedTraditionsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +82,9 @@ public class TraditionDetailActivity extends AppCompatActivity {
         // Initialize views
         initializeViews();
 
+        // Initialize new views
+        initializeNewViews();
+
         // Setup toolbar
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,6 +92,9 @@ public class TraditionDetailActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(categoryName);
         }
+
+        // Setup RecyclerViews
+        setupRecyclerViews();
 
         // Load tradition data
         loadTraditionData(traditionId);
@@ -74,58 +108,285 @@ public class TraditionDetailActivity extends AppCompatActivity {
         traditionTitle = findViewById(R.id.traditionTitle);
         traditionDescription = findViewById(R.id.traditionDescription);
         historicalBackground = findViewById(R.id.historicalBackground);
-        btnFavorite = findViewById(R.id.btnFavorite);
-        btnShare = findViewById(R.id.btnShare);
+        fabShare = findViewById(R.id.fabShare);
         videoPlayer = findViewById(R.id.videoPlayer);
+        fabPlayVideo = findViewById(R.id.fabPlayVideo);
+        historicalCard = findViewById(R.id.historicalCard);
+        audioCard = findViewById(R.id.audioCard);
         audioPlayer = findViewById(R.id.audioPlayer);
         btnPlayAudio = findViewById(R.id.btnPlayAudio);
         audioSeekBar = findViewById(R.id.audioSeekBar);
     }
 
+    private void initializeNewViews() {
+        regionCard = findViewById(R.id.regionCard);
+        seasonCard = findViewById(R.id.seasonCard);
+        ingredientsCard = findViewById(R.id.ingredientsCard);
+        stepsCard = findViewById(R.id.stepsCard);
+        relatedTraditionsCard = findViewById(R.id.relatedTraditionsCard);
+        regionText = findViewById(R.id.regionText);
+        seasonText = findViewById(R.id.seasonText);
+        ingredientsRecyclerView = findViewById(R.id.ingredientsRecyclerView);
+        stepsRecyclerView = findViewById(R.id.stepsRecyclerView);
+        relatedTraditionsRecyclerView = findViewById(R.id.relatedTraditionsRecyclerView);
+    }
+
+    private void setupRecyclerViews() {
+        // Setup ingredients RecyclerView
+        ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ingredientsAdapter = new IngredientsAdapter();
+        ingredientsRecyclerView.setAdapter(ingredientsAdapter);
+
+        // Setup steps RecyclerView
+        stepsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        stepsAdapter = new StepsAdapter();
+        stepsRecyclerView.setAdapter(stepsAdapter);
+
+        // Setup related traditions RecyclerView
+        relatedTraditionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        relatedTraditionsAdapter = new RelatedTraditionsAdapter();
+        relatedTraditionsRecyclerView.setAdapter(relatedTraditionsAdapter);
+    }
+
+    private void setupVideoPlayer(String videoUrl) {
+        if (videoUrl != null && !videoUrl.isEmpty()) {
+            try {
+                videoPlayer.setVisibility(View.VISIBLE);
+                fabPlayVideo.setVisibility(View.VISIBLE);
+                
+                // Try to load from raw resources first
+                int rawResourceId = getResources().getIdentifier(videoUrl.replace(".mp4", ""), "raw", getPackageName());
+                if (rawResourceId != 0) {
+                    videoPlayer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + rawResourceId));
+                } else {
+                    // Fallback to assets
+                    try {
+                        AssetFileDescriptor afd = getAssets().openFd("videos/" + videoUrl);
+                        videoPlayer.setVideoURI(Uri.parse("file:///android_asset/videos/" + videoUrl));
+                    } catch (IOException e) {
+                        Log.e("VideoPlayer", "Error loading video from assets: " + e.getMessage());
+                        Toast.makeText(this, "Error: Video file not found or corrupted", Toast.LENGTH_SHORT).show();
+                        videoPlayer.setVisibility(View.GONE);
+                        fabPlayVideo.setVisibility(View.GONE);
+                        return;
+                    }
+                }
+                
+                // Set up video player listeners
+                videoPlayer.setOnPreparedListener(mp -> {
+                    mp.setLooping(true);
+                    // Show play button
+                    fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
+                    
+                    // Set up play/pause button
+                    fabPlayVideo.setOnClickListener(v -> {
+                        if (isVideoPlaying) {
+                            videoPlayer.pause();
+                            fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
+                        } else {
+                            videoPlayer.start();
+                            fabPlayVideo.setImageResource(android.R.drawable.ic_media_pause);
+                        }
+                        isVideoPlaying = !isVideoPlaying;
+                    });
+                });
+
+                videoPlayer.setOnErrorListener((mp, what, extra) -> {
+                    Log.e("VideoPlayer", "Error playing video: " + what + ", " + extra);
+                    Toast.makeText(this, "Error: Video format not supported or file corrupted", Toast.LENGTH_SHORT).show();
+                    videoPlayer.setVisibility(View.GONE);
+                    fabPlayVideo.setVisibility(View.GONE);
+                    return true;
+                });
+
+                // Add completion listener
+                videoPlayer.setOnCompletionListener(mp -> {
+                    isVideoPlaying = false;
+                    fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("VideoPlayer", "Error setting up video player: " + e.getMessage());
+                Toast.makeText(this, "Error: Could not initialize video player", Toast.LENGTH_SHORT).show();
+                videoPlayer.setVisibility(View.GONE);
+                fabPlayVideo.setVisibility(View.GONE);
+            }
+        } else {
+            videoPlayer.setVisibility(View.GONE);
+            fabPlayVideo.setVisibility(View.GONE);
+        }
+    }
+
     private void loadTraditionData(int traditionId) {
-        // Load tradition data based on traditionId and categoryId
+        // Load tradition data based on category ID
         switch (categoryId) {
             case 1: // Traditional Clothing
                 if (traditionId == 1) {
-                    tradition = new Tradition(1, 1, "Karakou", 
-                        "Traditional Algerian dress with intricate embroidery", 
-                        "The Karakou is a traditional dress that has been worn by Algerian women for centuries. " +
-                        "It features elaborate embroidery and is often made from luxurious fabrics. " +
-                        "The dress is typically worn during special occasions and celebrations.",
-                        R.drawable.karakou, null, null, "Algeria");
+                    tradition = new Tradition(
+                        1,
+                        "Karakou",
+                        "The Karakou is a traditional Algerian dress known for its intricate embroidery and rich cultural significance. It is typically worn during special occasions and weddings.",
+                        "The Karakou has its origins in the Ottoman period and has evolved over centuries. It represents the fusion of Algerian and Ottoman cultures, with its distinctive embroidery patterns telling stories of heritage and craftsmanship.",
+                        "android.resource://" + getPackageName() + "/" + R.drawable.karakou,
+                        "file:///android_asset/videos/karakou_video.mp4",
+                        null,
+                        "Algiers, Constantine, Oran",
+                        "Weddings and Special Occasions",
+                        new String[]{
+                            "Fine silk fabric",
+                            "Gold and silver threads",
+                            "Traditional embroidery patterns",
+                            "Velvet accents",
+                            "Pearl and bead decorations"
+                        },
+                        new String[]{
+                            "Selection of high-quality silk fabric",
+                            "Traditional pattern design",
+                            "Hand embroidery with gold threads",
+                            "Assembly of dress components",
+                            "Final embellishments and adjustments"
+                        },
+                        new String[]{
+                            "Haik",
+                            "Burnous",
+                            "Caftan"
+                        }
+                    );
                 } else if (traditionId == 2) {
-                    tradition = new Tradition(2, 1, "Burnous", 
-                        "Traditional woolen cloak worn by men", 
-                        "The Burnous is a traditional woolen cloak that has been worn by Algerian men for generations. " +
-                        "It is made from wool and provides excellent protection against the cold and rain.",
-                        R.drawable.burnous, null, null, "Algeria");
+                    tradition = new Tradition(
+                        2,
+                        "Burnous",
+                        "The Burnous is a traditional woolen cloak worn by Algerian men, especially in rural areas. It is known for its warmth and distinctive hood.",
+                        "The Burnous has been worn in North Africa for centuries, with its design influenced by both Berber and Arab cultures. It was traditionally made from camel or sheep wool.",
+                        "android.resource://" + getPackageName() + "/" + R.drawable.burnous,
+                        "file:///android_asset/videos/burnous_video.mp4",
+                        null,
+                        "Kabylie, Aurès, Sahara",
+                        "Winter and Cold Seasons",
+                        new String[]{
+                            "Natural wool",
+                            "Traditional weaving tools",
+                            "Natural dyes",
+                            "Handmade buttons"
+                        },
+                        new String[]{
+                            "Wool collection and preparation",
+                            "Traditional weaving process",
+                            "Natural dyeing",
+                            "Assembly and finishing",
+                            "Decoration and embellishment"
+                        },
+                        new String[]{
+                            "Gandoura",
+                            "Djellaba",
+                            "Seroual"
+                        }
+                    );
                 }
                 break;
             case 2: // Festivals & Celebrations
                 if (traditionId == 3) {
-                    tradition = new Tradition(3, 2, "Eid al-Fitr", 
-                        "Celebration marking the end of Ramadan", 
-                        "Eid al-Fitr is one of the most important religious celebrations in Algeria. " +
-                        "Families gather to share traditional meals and exchange gifts.",
-                        R.drawable.eid, null, null, "Algeria");
+                    tradition = new Tradition(
+                        3,
+                        "Eid al-Fitr",
+                        "Eid al-Fitr is a major Islamic festival marking the end of Ramadan. In Algeria, it is celebrated with special prayers, family gatherings, and traditional foods.",
+                        "Eid al-Fitr has been celebrated in Algeria for centuries, with traditions passed down through generations. It represents the culmination of a month of fasting and spiritual reflection.",
+                        "android.resource://" + getPackageName() + "/" + R.drawable.eid,
+                        "file:///android_asset/videos/eid_video.mp4",
+                        null,
+                        "Throughout Algeria",
+                        "End of Ramadan",
+                        new String[]{
+                            "Traditional sweets",
+                            "Dates",
+                            "Coffee",
+                            "Mint tea"
+                        },
+                        new String[]{
+                            "Early morning prayers",
+                            "Family visits",
+                            "Traditional meal preparation",
+                            "Gift exchange",
+                            "Community celebrations"
+                        },
+                        new String[]{
+                            "Ramadan",
+                            "Eid al-Adha",
+                            "Mawlid"
+                        }
+                    );
                 } else if (traditionId == 4) {
-                    tradition = new Tradition(4, 2, "Yennayer", 
-                        "Algerian New Year Celebration", 
-                        "Yennayer is the Amazigh New Year celebration, marking the beginning of the agricultural year. " +
-                        "It is celebrated with traditional foods and cultural activities.",
-                        R.drawable.yennayer, null, null, "Algeria");
+                    tradition = new Tradition(
+                        4,
+                        "Yennayer",
+                        "Yennayer is the Amazigh (Berber) New Year celebration, marking the beginning of the agricultural year. It is celebrated with traditional foods and cultural events.",
+                        "Yennayer has been celebrated for over 2000 years in North Africa. It represents the Amazigh calendar and agricultural traditions.",
+                        "android.resource://" + getPackageName() + "/" + R.drawable.yennayer,
+                        "file:///android_asset/videos/yennayer_video.mp4",
+                        null,
+                        "Kabylie, Aurès, M'zab",
+                        "January 12th",
+                        new String[]{
+                            "Couscous",
+                            "Chicken",
+                            "Seven vegetables",
+                            "Traditional bread",
+                            "Dried fruits"
+                        },
+                        new String[]{
+                            "Preparation of traditional dishes",
+                            "Family gathering",
+                            "Cultural performances",
+                            "Traditional games",
+                            "Storytelling"
+                        },
+                        new String[]{
+                            "Imensi n Yennayer",
+                            "Tafsut",
+                            "Tiwizi"
+                        }
+                    );
                 }
                 break;
             case 3: // Food & Cuisine
                 if (traditionId == 5) {
-                    tradition = new Tradition(5, 3, "Couscous", 
-                        "Traditional Algerian dish", 
-                        "Couscous is a staple dish in Algerian cuisine, made from steamed semolina grains. " +
-                        "It is typically served with vegetables and meat in a flavorful broth.",
-                        R.drawable.couscous, null, null, "Algeria");
+                    tradition = new Tradition(
+                        5,
+                        "Couscous",
+                        "Couscous is the national dish of Algeria, made from steamed semolina grains served with vegetables and meat.",
+                        "Couscous has been a staple in Algerian cuisine for centuries, with its preparation methods passed down through generations. It represents the agricultural heritage of the region.",
+                        "android.resource://" + getPackageName() + "/" + R.drawable.couscous,
+                        "file:///android_asset/videos/couscous_video.mp4",
+                        null,
+                        "Throughout Algeria",
+                        "All year, especially Fridays",
+                        new String[]{
+                            "Semolina",
+                            "Lamb or chicken",
+                            "Carrots",
+                            "Zucchini",
+                            "Chickpeas",
+                            "Turnips",
+                            "Onions",
+                            "Tomatoes",
+                            "Spices"
+                        },
+                        new String[]{
+                            "Prepare the semolina",
+                            "Steam the couscous",
+                            "Cook the meat and vegetables",
+                            "Prepare the sauce",
+                            "Assemble and serve"
+                        },
+                        new String[]{
+                            "Tajine",
+                            "Chorba",
+                            "Merguez"
+                        }
+                    );
                 }
                 break;
-            // Add more cases for other categories
         }
 
         if (tradition == null) {
@@ -137,42 +398,102 @@ public class TraditionDetailActivity extends AppCompatActivity {
         // Update UI with tradition data
         traditionTitle.setText(tradition.getTitle());
         traditionDescription.setText(tradition.getDescription());
-        historicalBackground.setText(tradition.getHistoricalBackground());
-
+        
+        // Load image using Glide
         Glide.with(this)
-                .load(tradition.getImageResourceId())
-                .centerCrop()
-                .into(traditionImage);
+            .load(tradition.getImageUrl())
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.error)
+            .into(traditionImage);
 
-        // Setup media content if available
-        setupMediaContent();
-    }
-
-    private void setupMediaContent() {
-        // Setup video if available
-        if (tradition.getVideoUrl() != null) {
-            videoPlayer.setVisibility(View.VISIBLE);
-            videoPlayer.setVideoURI(Uri.parse(tradition.getVideoUrl()));
+        // Setup region and season
+        if (tradition.getRegion() != null && !tradition.getRegion().isEmpty()) {
+            regionCard.setVisibility(View.VISIBLE);
+            regionText.setText(tradition.getRegion());
         }
 
-        // Setup audio if available
-        if (tradition.getAudioUrl() != null) {
-            audioPlayer.setVisibility(View.VISIBLE);
-            setupAudioPlayer();
+        if (tradition.getSeason() != null && !tradition.getSeason().isEmpty()) {
+            seasonCard.setVisibility(View.VISIBLE);
+            seasonText.setText(tradition.getSeason());
+        }
+
+        // Setup ingredients
+        if (tradition.getIngredients() != null && tradition.getIngredients().length > 0) {
+            ingredientsCard.setVisibility(View.VISIBLE);
+            ingredientsAdapter.setIngredients(tradition.getIngredients());
+        }
+
+        // Setup steps
+        if (tradition.getSteps() != null && tradition.getSteps().length > 0) {
+            stepsCard.setVisibility(View.VISIBLE);
+            stepsAdapter.setSteps(tradition.getSteps());
+        }
+
+        // Setup related traditions
+        if (tradition.getRelatedTraditions() != null && tradition.getRelatedTraditions().length > 0) {
+            relatedTraditionsCard.setVisibility(View.VISIBLE);
+            relatedTraditionsAdapter.setRelatedTraditions(tradition.getRelatedTraditions());
+        }
+
+        // Setup video player
+        setupVideoPlayer(tradition.getVideoUrl());
+
+        // Setup historical background
+        if (tradition.getHistoricalBackground() != null && !tradition.getHistoricalBackground().isEmpty()) {
+            historicalCard.setVisibility(View.VISIBLE);
+            historicalBackground.setText(tradition.getHistoricalBackground());
+        }
+
+        // Setup audio player if audio URL is available
+        if (tradition.getAudioUrl() != null && !tradition.getAudioUrl().isEmpty()) {
+            audioCard.setVisibility(View.VISIBLE);
+            setupAudioPlayer(tradition.getAudioUrl());
         }
     }
 
-    private void setupAudioPlayer() {
+    private void setupAudioPlayer(String audioUrl) {
         try {
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(tradition.getAudioUrl());
-            mediaPlayer.prepare();
+            mediaPlayer.setDataSource(audioUrl);
+            mediaPlayer.prepareAsync();
+            
+            mediaPlayer.setOnPreparedListener(mp -> {
+                audioSeekBar.setMax(mp.getDuration());
+                btnPlayAudio.setOnClickListener(v -> {
+                    if (mp.isPlaying()) {
+                        mp.pause();
+                        btnPlayAudio.setImageResource(android.R.drawable.ic_media_play);
+                    } else {
+                        mp.start();
+                        btnPlayAudio.setImageResource(android.R.drawable.ic_media_pause);
+                    }
+                });
+            });
 
-            audioSeekBar.setMax(mediaPlayer.getDuration());
+            mediaPlayer.setOnCompletionListener(mp -> {
+                btnPlayAudio.setImageResource(android.R.drawable.ic_media_play);
+                audioSeekBar.setProgress(0);
+            });
+
+            // Update seekbar position
+            new Thread(() -> {
+                while (mediaPlayer != null) {
+                    try {
+                        if (mediaPlayer.isPlaying()) {
+                            final int currentPosition = mediaPlayer.getCurrentPosition();
+                            runOnUiThread(() -> audioSeekBar.setProgress(currentPosition));
+                        }
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
             audioSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
+                    if (fromUser && mediaPlayer != null) {
                         mediaPlayer.seekTo(progress);
                     }
                 }
@@ -183,35 +504,14 @@ public class TraditionDetailActivity extends AppCompatActivity {
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {}
             });
-
-            btnPlayAudio.setOnClickListener(v -> {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    btnPlayAudio.setImageResource(android.R.drawable.ic_media_play);
-                } else {
-                    mediaPlayer.start();
-                    btnPlayAudio.setImageResource(android.R.drawable.ic_media_pause);
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "Error setting up audio player", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setupClickListeners() {
-        btnFavorite.setOnClickListener(v -> {
-            tradition.setFavorite(!tradition.isFavorite());
-            btnFavorite.setImageResource(
-                tradition.isFavorite() ? 
-                android.R.drawable.btn_star_big_on : 
-                android.R.drawable.btn_star_big_off
-            );
-            Toast.makeText(this, 
-                tradition.isFavorite() ? R.string.msg_added_to_favorites : R.string.msg_removed_from_favorites, 
-                Toast.LENGTH_SHORT).show();
-        });
-
-        btnShare.setOnClickListener(v -> {
+        fabShare.setOnClickListener(v -> {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, tradition.getTitle());
@@ -236,6 +536,11 @@ public class TraditionDetailActivity extends AppCompatActivity {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
+        }
+        if (videoPlayer != null) {
+            videoPlayer.pause();
+            isVideoPlaying = false;
+            fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
         }
     }
 } 
