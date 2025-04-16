@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.lang.reflect.Field;
 
 public class TraditionDetailActivity extends AppCompatActivity {
-    private ImageView traditionImage;
     private TextView traditionTitle;
     private TextView traditionDescription;
     private TextView historicalBackground;
@@ -117,7 +116,6 @@ public class TraditionDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        traditionImage = findViewById(R.id.traditionImage);
         traditionTitle = findViewById(R.id.traditionTitle);
         traditionDescription = findViewById(R.id.traditionDescription);
         historicalBackground = findViewById(R.id.historicalBackground);
@@ -244,7 +242,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Karakou",
                         "The Karakou is a traditional Algerian dress known for its intricate embroidery and rich cultural significance. It is typically worn during special occasions and weddings.",
                         "The Karakou has its origins in the Ottoman period and has evolved over centuries. It represents the fusion of Algerian and Ottoman cultures, with its distinctive embroidery patterns telling stories of heritage and craftsmanship.",
-                        "android.resource://" + getPackageName() + "/" + R.drawable.karakou,
+                        null,
                         "karakou",
                         null,
                         "Algiers, Constantine, Oran",
@@ -275,7 +273,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Burnous",
                         "The Burnous is a traditional woolen cloak worn by Algerian men, especially in rural areas. It is known for its warmth and distinctive hood.",
                         "The Burnous has been worn in North Africa for centuries, with its design influenced by both Berber and Arab cultures. It was traditionally made from camel or sheep wool.",
-                        "android.resource://" + getPackageName() + "/" + R.drawable.burnous,
+                        null,
                         "burnous",
                         null,
                         "Kabylie, Aurès, Sahara",
@@ -308,7 +306,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Eid al-Fitr",
                         "Eid al-Fitr is a major Islamic festival marking the end of Ramadan. In Algeria, it is celebrated with special prayers, family gatherings, and traditional foods.",
                         "Eid al-Fitr has been celebrated in Algeria for centuries, with traditions passed down through generations. It represents the culmination of a month of fasting and spiritual reflection.",
-                        "android.resource://" + getPackageName() + "/" + R.drawable.eid,
+                        null,
                         "eid",
                         null,
                         "Throughout Algeria",
@@ -338,7 +336,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Yennayer",
                         "Yennayer is the Amazigh (Berber) New Year celebration, marking the beginning of the agricultural year. It is celebrated with traditional foods and cultural events.",
                         "Yennayer has been celebrated for over 2000 years in North Africa. It represents the Amazigh calendar and agricultural traditions.",
-                        "android.resource://" + getPackageName() + "/" + R.drawable.yennayer,
+                        null,
                         "yennayer",
                         null,
                         "Kabylie, Aurès, M'zab",
@@ -372,7 +370,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Couscous",
                         "Couscous is the national dish of Algeria, made from steamed semolina grains served with vegetables and meat.",
                         "Couscous has been a staple in Algerian cuisine for centuries, with its preparation methods passed down through generations. It represents the agricultural heritage of the region.",
-                        "android.resource://" + getPackageName() + "/" + R.drawable.couscous,
+                        null,
                         "couscous",
                         null,
                         "Throughout Algeria",
@@ -414,13 +412,6 @@ public class TraditionDetailActivity extends AppCompatActivity {
         // Update UI with tradition data
         traditionTitle.setText(tradition.getTitle());
         traditionDescription.setText(tradition.getDescription());
-
-        // Load image using Glide
-        Glide.with(this)
-            .load(tradition.getImageUrl())
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.error)
-                .into(traditionImage);
 
         // Setup region and season
         if (tradition.getRegion() != null && !tradition.getRegion().isEmpty()) {
