@@ -62,7 +62,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "The Karakou is a traditional Algerian dress known for its intricate embroidery and rich cultural significance. It is typically worn during special occasions and weddings.", // description
                     "The Karakou has its origins in the Ottoman period and has evolved over centuries. It represents the fusion of Algerian and Ottoman cultures, with its distinctive embroidery patterns telling stories of heritage and craftsmanship.", // historicalBackground
                     "android.resource://" + getPackageName() + "/" + R.drawable.karakou, // imageUrl
-                    "karakou_video.mp4", // videoUrl
+                    "karakou", // videoUrl
                     null, // audioUrl
                     "Algiers, Constantine, Oran", // region
                     "Weddings and Special Occasions", // season
@@ -92,7 +92,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "The Burnous is a traditional woolen cloak worn by Algerian men, especially in rural areas. It is known for its warmth and distinctive hood.", // description
                     "The Burnous has been worn in North Africa for centuries, with its design influenced by both Berber and Arab cultures. It was traditionally made from camel or sheep wool.", // historicalBackground
                     "android.resource://" + getPackageName() + "/" + R.drawable.burnous, // imageUrl
-                    "burnous_video.mp4", // videoUrl
+                    "burnous", // videoUrl
                     null, // audioUrl
                     "Kabylie, Aurès, Sahara", // region
                     "Winter and Cold Seasons", // season
@@ -123,7 +123,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Eid al-Fitr is a major Islamic festival marking the end of Ramadan. In Algeria, it is celebrated with special prayers, family gatherings, and traditional foods.", // description
                     "Eid al-Fitr has been celebrated in Algeria for centuries, with traditions passed down through generations. It represents the culmination of a month of fasting and spiritual reflection.", // historicalBackground
                     "android.resource://" + getPackageName() + "/" + R.drawable.eid, // imageUrl
-                    "eid_video.mp4", // videoUrl
+                    "eid", // videoUrl
                     null, // audioUrl
                     "Throughout Algeria", // region
                     "End of Ramadan", // season
@@ -152,7 +152,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Yennayer is the Amazigh (Berber) New Year celebration, marking the beginning of the agricultural year. It is celebrated with traditional foods and cultural events.", // description
                     "Yennayer has been celebrated for over 2000 years in North Africa. It represents the Amazigh calendar and agricultural traditions.", // historicalBackground
                     "android.resource://" + getPackageName() + "/" + R.drawable.yennayer, // imageUrl
-                    "yennayer_video.mp4", // videoUrl
+                    "yennayer", // videoUrl
                     null, // audioUrl
                     "Kabylie, Aurès, M'zab", // region
                     "January 12th", // season
@@ -184,7 +184,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Couscous is the national dish of Algeria, made from steamed semolina grains served with vegetables and meat.", // description
                     "Couscous has been a staple in Algerian cuisine for centuries, with its preparation methods passed down through generations. It represents the agricultural heritage of the region.", // historicalBackground
                     "android.resource://" + getPackageName() + "/" + R.drawable.couscous, // imageUrl
-                    "couscous_video.mp4", // videoUrl
+                    "couscous", // videoUrl
                     null, // audioUrl
                     "Throughout Algeria", // region
                     "All year, especially Fridays", // season

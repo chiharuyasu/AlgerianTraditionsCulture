@@ -30,6 +30,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import android.content.res.AssetFileDescriptor;
 import android.util.Log;
+import java.util.Arrays;
+import java.lang.reflect.Field;
 
 public class TraditionDetailActivity extends AppCompatActivity {
     private ImageView traditionImage;
@@ -67,6 +69,17 @@ public class TraditionDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tradition_detail);
+
+        // List all available raw resources for debugging
+        Field[] fields = R.raw.class.getFields();
+        Log.d("VideoPlayer", "Available raw resources:");
+        for (Field field : fields) {
+            try {
+                Log.d("VideoPlayer", "Resource: " + field.getName());
+            } catch (Exception e) {
+                Log.e("VideoPlayer", "Error listing resource: " + e.getMessage());
+            }
+        }
 
         // Get tradition and category information from intent
         int traditionId = getIntent().getIntExtra("tradition_id", -1);
@@ -149,70 +162,73 @@ public class TraditionDetailActivity extends AppCompatActivity {
     }
 
     private void setupVideoPlayer(String videoUrl) {
+        Log.d("VideoPlayer", "setupVideoPlayer called with URL: " + videoUrl);
+        
         if (videoUrl != null && !videoUrl.isEmpty()) {
             try {
+                // Make sure the video player and play button are visible
                 videoPlayer.setVisibility(View.VISIBLE);
                 fabPlayVideo.setVisibility(View.VISIBLE);
                 
-                // Try to load from raw resources first
-                int rawResourceId = getResources().getIdentifier(videoUrl.replace(".mp4", ""), "raw", getPackageName());
-                if (rawResourceId != 0) {
-                    videoPlayer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + rawResourceId));
-                } else {
-                    // Fallback to assets
-                    try {
-                        AssetFileDescriptor afd = getAssets().openFd("videos/" + videoUrl);
-                        videoPlayer.setVideoURI(Uri.parse("file:///android_asset/videos/" + videoUrl));
-                    } catch (IOException e) {
-                        Log.e("VideoPlayer", "Error loading video from assets: " + e.getMessage());
-                        Toast.makeText(this, "Error: Video file not found or corrupted", Toast.LENGTH_SHORT).show();
+                // Get resource ID from raw folder
+                int resourceId = getResources().getIdentifier(videoUrl, "raw", getPackageName());
+                Log.d("VideoPlayer", "Resource ID for " + videoUrl + ": " + resourceId);
+                
+                if (resourceId != 0) {
+                    // Load from raw resources
+                    Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + resourceId);
+                    Log.d("VideoPlayer", "Setting video URI: " + videoUri.toString());
+                    
+                    // Set up video player
+                    videoPlayer.setVideoURI(videoUri);
+                    videoPlayer.requestFocus();
+                    
+                    // Set up video player listeners
+                    videoPlayer.setOnPreparedListener(mp -> {
+                        Log.d("VideoPlayer", "Video prepared successfully");
+                        mp.setLooping(true);
+                        fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
+                        
+                        fabPlayVideo.setOnClickListener(v -> {
+                            if (isVideoPlaying) {
+                                videoPlayer.pause();
+                                fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
+                            } else {
+                                videoPlayer.start();
+                                fabPlayVideo.setImageResource(android.R.drawable.ic_media_pause);
+                            }
+                            isVideoPlaying = !isVideoPlaying;
+                        });
+                    });
+
+                    videoPlayer.setOnErrorListener((mp, what, extra) -> {
+                        Log.e("VideoPlayer", "Error playing video - what: " + what + ", extra: " + extra);
+                        Toast.makeText(this, "Error: Could not play video (Error code: " + what + ")", Toast.LENGTH_SHORT).show();
                         videoPlayer.setVisibility(View.GONE);
                         fabPlayVideo.setVisibility(View.GONE);
-                        return;
-                    }
-                }
-                
-                // Set up video player listeners
-                videoPlayer.setOnPreparedListener(mp -> {
-                    mp.setLooping(true);
-                    // Show play button
-                    fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
-                    
-                    // Set up play/pause button
-                    fabPlayVideo.setOnClickListener(v -> {
-                        if (isVideoPlaying) {
-                            videoPlayer.pause();
-                            fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
-                        } else {
-                            videoPlayer.start();
-                            fabPlayVideo.setImageResource(android.R.drawable.ic_media_pause);
-                        }
-                        isVideoPlaying = !isVideoPlaying;
+                        return true;
                     });
-                });
 
-                videoPlayer.setOnErrorListener((mp, what, extra) -> {
-                    Log.e("VideoPlayer", "Error playing video: " + what + ", " + extra);
-                    Toast.makeText(this, "Error: Video format not supported or file corrupted", Toast.LENGTH_SHORT).show();
+                    videoPlayer.setOnCompletionListener(mp -> {
+                        Log.d("VideoPlayer", "Video playback completed");
+                        isVideoPlaying = false;
+                        fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
+                    });
+                } else {
+                    Log.e("VideoPlayer", "Resource not found for: " + videoUrl);
+                    Toast.makeText(this, "Error: Video file not found (" + videoUrl + ")", Toast.LENGTH_SHORT).show();
                     videoPlayer.setVisibility(View.GONE);
                     fabPlayVideo.setVisibility(View.GONE);
-                    return true;
-                });
-
-                // Add completion listener
-                videoPlayer.setOnCompletionListener(mp -> {
-                    isVideoPlaying = false;
-                    fabPlayVideo.setImageResource(android.R.drawable.ic_media_play);
-                });
-
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("VideoPlayer", "Error setting up video player: " + e.getMessage());
-                Toast.makeText(this, "Error: Could not initialize video player", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error: Could not initialize video player - " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 videoPlayer.setVisibility(View.GONE);
                 fabPlayVideo.setVisibility(View.GONE);
             }
         } else {
+            Log.d("VideoPlayer", "Video URL is null or empty");
             videoPlayer.setVisibility(View.GONE);
             fabPlayVideo.setVisibility(View.GONE);
         }
@@ -229,7 +245,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "The Karakou is a traditional Algerian dress known for its intricate embroidery and rich cultural significance. It is typically worn during special occasions and weddings.",
                         "The Karakou has its origins in the Ottoman period and has evolved over centuries. It represents the fusion of Algerian and Ottoman cultures, with its distinctive embroidery patterns telling stories of heritage and craftsmanship.",
                         "android.resource://" + getPackageName() + "/" + R.drawable.karakou,
-                        "file:///android_asset/videos/karakou_video.mp4",
+                        "karakou",
                         null,
                         "Algiers, Constantine, Oran",
                         "Weddings and Special Occasions",
@@ -260,7 +276,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "The Burnous is a traditional woolen cloak worn by Algerian men, especially in rural areas. It is known for its warmth and distinctive hood.",
                         "The Burnous has been worn in North Africa for centuries, with its design influenced by both Berber and Arab cultures. It was traditionally made from camel or sheep wool.",
                         "android.resource://" + getPackageName() + "/" + R.drawable.burnous,
-                        "file:///android_asset/videos/burnous_video.mp4",
+                        "burnous",
                         null,
                         "Kabylie, Aurès, Sahara",
                         "Winter and Cold Seasons",
@@ -293,7 +309,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Eid al-Fitr is a major Islamic festival marking the end of Ramadan. In Algeria, it is celebrated with special prayers, family gatherings, and traditional foods.",
                         "Eid al-Fitr has been celebrated in Algeria for centuries, with traditions passed down through generations. It represents the culmination of a month of fasting and spiritual reflection.",
                         "android.resource://" + getPackageName() + "/" + R.drawable.eid,
-                        "file:///android_asset/videos/eid_video.mp4",
+                        "eid",
                         null,
                         "Throughout Algeria",
                         "End of Ramadan",
@@ -323,7 +339,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Yennayer is the Amazigh (Berber) New Year celebration, marking the beginning of the agricultural year. It is celebrated with traditional foods and cultural events.",
                         "Yennayer has been celebrated for over 2000 years in North Africa. It represents the Amazigh calendar and agricultural traditions.",
                         "android.resource://" + getPackageName() + "/" + R.drawable.yennayer,
-                        "file:///android_asset/videos/yennayer_video.mp4",
+                        "yennayer",
                         null,
                         "Kabylie, Aurès, M'zab",
                         "January 12th",
@@ -357,7 +373,7 @@ public class TraditionDetailActivity extends AppCompatActivity {
                         "Couscous is the national dish of Algeria, made from steamed semolina grains served with vegetables and meat.",
                         "Couscous has been a staple in Algerian cuisine for centuries, with its preparation methods passed down through generations. It represents the agricultural heritage of the region.",
                         "android.resource://" + getPackageName() + "/" + R.drawable.couscous,
-                        "file:///android_asset/videos/couscous_video.mp4",
+                        "couscous",
                         null,
                         "Throughout Algeria",
                         "All year, especially Fridays",
@@ -398,13 +414,13 @@ public class TraditionDetailActivity extends AppCompatActivity {
         // Update UI with tradition data
         traditionTitle.setText(tradition.getTitle());
         traditionDescription.setText(tradition.getDescription());
-        
+
         // Load image using Glide
         Glide.with(this)
             .load(tradition.getImageUrl())
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.error)
-            .into(traditionImage);
+                .into(traditionImage);
 
         // Setup region and season
         if (tradition.getRegion() != null && !tradition.getRegion().isEmpty()) {
