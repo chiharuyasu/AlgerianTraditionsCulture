@@ -24,7 +24,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         void onCategoryClick(Category category);
     }
 
-    public CategoryAdapter(OnCategoryClickListener listener) {
+    public CategoryAdapter(List<Category> categories, OnCategoryClickListener listener) {
+        this.categories = categories;
         this.listener = listener;
     }
 

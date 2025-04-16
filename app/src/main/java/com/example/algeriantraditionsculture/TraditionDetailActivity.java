@@ -22,16 +22,23 @@ import com.bumptech.glide.Glide;
 import com.example.algeriantraditionsculture.adapter.IngredientsAdapter;
 import com.example.algeriantraditionsculture.adapter.StepsAdapter;
 import com.example.algeriantraditionsculture.adapter.RelatedTraditionsAdapter;
+import com.example.algeriantraditionsculture.adapter.CommentAdapter;
 import com.example.algeriantraditionsculture.model.Tradition;
+import com.example.algeriantraditionsculture.model.Comment;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.button.MaterialButton;
 
 import java.io.IOException;
 import android.content.res.AssetFileDescriptor;
 import android.util.Log;
 import java.util.Arrays;
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class TraditionDetailActivity extends AppCompatActivity {
     private TextView traditionTitle;
@@ -63,6 +70,12 @@ public class TraditionDetailActivity extends AppCompatActivity {
     private IngredientsAdapter ingredientsAdapter;
     private StepsAdapter stepsAdapter;
     private RelatedTraditionsAdapter relatedTraditionsAdapter;
+    private MaterialCardView commentsCard;
+    private RecyclerView commentsRecyclerView;
+    private TextInputEditText commentInput;
+    private MaterialButton btnSubmitComment;
+    private CommentAdapter commentAdapter;
+    private List<Comment> comments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +93,13 @@ public class TraditionDetailActivity extends AppCompatActivity {
             }
         }
 
+        // Initialize views
+        initializeViews();
+        initializeNewViews();
+
+        // Setup RecyclerViews
+        setupRecyclerViews();
+
         // Get tradition and category information from intent
         int traditionId = getIntent().getIntExtra("tradition_id", -1);
         categoryId = getIntent().getIntExtra("category_id", -1);
@@ -91,12 +111,6 @@ public class TraditionDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Initialize views
-        initializeViews();
-
-        // Initialize new views
-        initializeNewViews();
-
         // Setup toolbar
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,14 +119,14 @@ public class TraditionDetailActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(categoryName);
         }
 
-        // Setup RecyclerViews
-        setupRecyclerViews();
-
         // Load tradition data
         loadTraditionData(traditionId);
 
         // Setup click listeners
         setupClickListeners();
+
+        // Setup comments
+        setupComments();
     }
 
     private void initializeViews() {
@@ -140,6 +154,10 @@ public class TraditionDetailActivity extends AppCompatActivity {
         ingredientsRecyclerView = findViewById(R.id.ingredientsRecyclerView);
         stepsRecyclerView = findViewById(R.id.stepsRecyclerView);
         relatedTraditionsRecyclerView = findViewById(R.id.relatedTraditionsRecyclerView);
+        commentsCard = findViewById(R.id.commentsCard);
+        commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
+        commentInput = findViewById(R.id.commentInput);
+        btnSubmitComment = findViewById(R.id.btnSubmitComment);
     }
 
     private void setupRecyclerViews() {
@@ -525,6 +543,43 @@ public class TraditionDetailActivity extends AppCompatActivity {
             shareIntent.putExtra(Intent.EXTRA_TEXT, 
                 tradition.getTitle() + "\n\n" + tradition.getDescription());
             startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_tradition)));
+        });
+    }
+
+    private void setupComments() {
+        // Initialize comments list and adapter
+        comments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(comments);
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        commentsRecyclerView.setAdapter(commentAdapter);
+
+        // Show comments card
+        commentsCard.setVisibility(View.VISIBLE);
+
+        // Setup submit button click listener
+        btnSubmitComment.setOnClickListener(v -> {
+            String commentText = commentInput.getText().toString().trim();
+            if (!commentText.isEmpty()) {
+                // TODO: Replace with actual user ID and name from authentication
+                String userId = "user123";
+                String userName = "Anonymous User";
+                
+                Comment comment = new Comment(
+                    UUID.randomUUID().toString(),
+                    String.valueOf(tradition.getId()),
+                    userId,
+                    userName,
+                    commentText
+                );
+                
+                // TODO: Save comment to database
+                comments.add(0, comment);
+                commentAdapter.notifyItemInserted(0);
+                commentInput.setText("");
+                
+                // Scroll to the new comment
+                commentsRecyclerView.smoothScrollToPosition(0);
+            }
         });
     }
 

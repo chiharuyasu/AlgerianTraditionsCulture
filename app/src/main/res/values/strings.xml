@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Algerian Traditions Culture</string>
+    <string name="app_name">Algerian Traditions &amp; Culture</string>
 
     <!-- Categories -->
     <string name="category_traditional_clothing">Traditional Clothing</string>
@@ -63,4 +63,10 @@
     <!-- Common -->
     <string name="retry">Retry</string>
     <string name="no_data_available">No data available</string>
+
+    <!-- Search and Comments -->
+    <string name="search_traditions">Search traditions...</string>
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add a comment</string>
+    <string name="submit">Submit</string>
 </resources>

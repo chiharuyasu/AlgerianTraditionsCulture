@@ -1,10 +1,19 @@
 package com.example.algeriantraditionsculture.model;
 
+import com.example.algeriantraditionsculture.R;
+
 public class Category {
     private int id;
     private String name;
     private String description;
     private int imageResourceId;
+
+    public Category(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.imageResourceId = R.drawable.placeholder; // Default placeholder image
+    }
 
     public Category(int id, String name, String description, int imageResourceId) {
         this.id = id;
