@@ -18,13 +18,7 @@
             app:title="@string/app_name"
             app:titleTextColor="@android:color/white"/>
 
-        <com.google.android.material.search.SearchBar
-            android:id="@+id/searchBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:hint="@string/search_traditions"
-            app:iconifiedByDefault="false"/>
+        <!-- SearchBar and SearchView removed -->
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -37,13 +31,5 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <!-- Removed FloatingActionButton for search -->
-
-    <com.google.android.material.search.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        app:layout_anchor="@id/searchBar"
-        app:layout_anchorGravity="bottom"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

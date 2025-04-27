@@ -2,8 +2,6 @@ package com.example.algeriantraditionsculture;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.algeriantraditionsculture.adapter.CategoryAdapter;
 import com.example.algeriantraditionsculture.model.Category;
-import com.google.android.material.search.SearchBar;
-import com.google.android.material.search.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +21,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     private RecyclerView categoriesRecyclerView;
     private CategoryAdapter categoryAdapter;
     private List<Category> categories;
-    private SearchBar searchBar;
-    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +29,12 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
         // Initialize views
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView);
-        searchBar = findViewById(R.id.searchBar);
-        searchView = findViewById(R.id.searchView);
 
         // Initialize categories list
         categories = new ArrayList<>();
 
         // Setup RecyclerView
         setupRecyclerView();
-
-        // Setup search functionality
-        setupSearch();
 
         // Load categories
         loadCategories();
@@ -55,66 +44,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         categoryAdapter = new CategoryAdapter(categories, this);
         categoriesRecyclerView.setAdapter(categoryAdapter);
-    }
-
-    private void setupSearch() {
-        // Setup search view
-        searchView.setupWithSearchBar(searchBar);
-        
-        // Handle search text changes in real-time
-        searchView.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                performSearch(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        // Handle search bar click
-        searchBar.setOnClickListener(v -> {
-            searchView.show();
-        });
-
-        // Handle search view close
-        searchView.addTransitionListener((searchView, previousState, newState) -> {
-            if (newState == SearchView.TransitionState.HIDDEN) {
-                // Reset the search results when search view is closed
-                categoryAdapter.setCategories(categories);
-            }
-        });
-    }
-
-    private void performSearch(String query) {
-        if (categories == null) return;
-
-        String searchQuery = query.toLowerCase().trim();
-        List<Category> searchResults = new ArrayList<>();
-
-        if (searchQuery.isEmpty()) {
-            // If search query is empty, show all categories
-            searchResults.addAll(categories);
-        } else {
-            // Search in category name and description
-            for (Category category : categories) {
-                if (category.getName().toLowerCase().contains(searchQuery) ||
-                    category.getDescription().toLowerCase().contains(searchQuery)) {
-                    searchResults.add(category);
-                }
-            }
-        }
-
-        // Update the adapter with search results
-        categoryAdapter.setCategories(searchResults);
-
-        // Show "No results" message if needed
-        if (searchResults.isEmpty() && !searchQuery.isEmpty()) {
-            Toast.makeText(this, "No results found for: " + query, Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void loadCategories() {
@@ -149,8 +78,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         MenuItem searchItem = menu.findItem(R.id.action_search);
         if (searchItem != null) {
             searchItem.setOnMenuItemClickListener(item -> {
-                Intent intent = new Intent(this, SearchActivity.class);
-                startActivity(intent);
+                Toast.makeText(this, "Search system coming soon!", Toast.LENGTH_SHORT).show();
                 return true;
             });
         }
