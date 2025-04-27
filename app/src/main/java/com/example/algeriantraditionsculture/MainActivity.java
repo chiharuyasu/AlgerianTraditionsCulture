@@ -145,6 +145,15 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        // Add search icon click logic
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null) {
+            searchItem.setOnMenuItemClickListener(item -> {
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+                return true;
+            });
+        }
         return true;
     }
 
