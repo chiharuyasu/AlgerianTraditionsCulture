@@ -419,6 +419,99 @@ public class TraditionDetailActivity extends AppCompatActivity {
                     );
                 }
                 break;
+            case 4: // Marriage Customs
+                if (traditionId == 6) {
+                    tradition = new Tradition(
+                        6,
+                        "El Khouara (Henna Night)",
+                        "El Khouara is the traditional Algerian henna night, celebrated before the wedding ceremony. It is a festive gathering where the bride is adorned with henna and surrounded by family and friends.",
+                        "Henna night is a centuries-old custom in Algeria, symbolizing beauty, joy, and blessings for the bride. The ritual includes singing, dancing, and the application of intricate henna designs.",
+                        null,
+                        "henna_night",
+                        null,
+                        "Throughout Algeria",
+                        "Wedding Eve",
+                        new String[]{
+                            "Henna paste",
+                            "Traditional dresses",
+                            "Sweets and pastries",
+                            "Musical instruments"
+                        },
+                        new String[]{
+                            "Preparation of henna paste",
+                            "Gathering of women",
+                            "Application of henna designs",
+                            "Singing and dancing",
+                            "Blessings and gift-giving"
+                        },
+                        new String[]{
+                            "Wedding Ceremony",
+                            "Engagement Party",
+                            "Aroussa Preparation"
+                        }
+                    );
+                }
+                break;
+            case 5: // Historical Landmarks
+                if (traditionId == 7) {
+                    tradition = new Tradition(
+                        7,
+                        "Casbah of Algiers",
+                        "The Casbah is the historic medina of Algiers, a UNESCO World Heritage Site known for its labyrinthine streets, whitewashed houses, and rich history.",
+                        "The Casbah dates back to the 10th century and has witnessed centuries of Algerian history, from Berber dynasties to Ottoman rule and the fight for independence.",
+                        null,
+                        "casbah_algiers",
+                        null,
+                        "Algiers",
+                        "All year",
+                        new String[]{
+                            "Stone-paved alleys",
+                            "Traditional houses",
+                            "Historic mosques",
+                            "Artisan workshops"
+                        },
+                        new String[]{
+                            "Guided walking tour",
+                            "Visit to historic sites",
+                            "Exploring artisan shops",
+                            "Tasting local foods"
+                        },
+                        new String[]{
+                            "Ketchaoua Mosque",
+                            "Palace of the Dey",
+                            "Martyrs' Square"
+                        }
+                    );
+                }
+                break;
+            case 6: // Popular Sayings and Proverbs
+                if (traditionId == 8) {
+                    tradition = new Tradition(
+                        8,
+                        "Man sabara zafira",
+                        "A popular Algerian proverb meaning 'He who is patient, succeeds.' It highlights the value of patience and perseverance in Algerian culture.",
+                        "This proverb has been passed down through generations, reflecting the importance of endurance and hope in Algerian society.",
+                        null,
+                        "proverb_patience",
+                        null,
+                        "Throughout Algeria",
+                        "All year",
+                        new String[]{
+                            "Oral tradition"
+                        },
+                        new String[]{
+                            "Storytelling",
+                            "Sharing wisdom in gatherings",
+                            "Teaching children life lessons"
+                        },
+                        new String[]{
+                            "Other proverbs",
+                            "Popular sayings",
+                            "Folk tales"
+                        }
+                    );
+                }
+                break;
         }
 
         if (tradition == null) {

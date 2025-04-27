@@ -59,27 +59,24 @@ public class TraditionAdapter extends RecyclerView.Adapter<TraditionAdapter.Trad
             android.R.drawable.btn_star_big_off
         );
 
-        Glide.with(holder.itemView.getContext())
-                .load(currentTradition.getImageUrl())
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.error)
-                .centerCrop()
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        if (e != null) {
-                            Log.e("TraditionAdapter", "Image loading failed: " + e.getMessage());
-                            e.logRootCauses("TraditionAdapter");
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(holder.traditionImage);
+        // Image logic: handle resource id (from local drawable) or URL
+        String imageUrl = currentTradition.getImageUrl();
+        try {
+            int resId = Integer.parseInt(imageUrl);
+            Glide.with(holder.itemView.getContext())
+                    .load(resId)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.error)
+                    .centerCrop()
+                    .into(holder.traditionImage);
+        } catch (NumberFormatException e) {
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.error)
+                    .centerCrop()
+                    .into(holder.traditionImage);
+        }
     }
 
     @Override

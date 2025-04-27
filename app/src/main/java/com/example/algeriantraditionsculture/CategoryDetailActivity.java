@@ -61,7 +61,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Karakou", // title
                     "The Karakou is a traditional Algerian dress known for its intricate embroidery and rich cultural significance. It is typically worn during special occasions and weddings.", // description
                     "The Karakou has its origins in the Ottoman period and has evolved over centuries. It represents the fusion of Algerian and Ottoman cultures, with its distinctive embroidery patterns telling stories of heritage and craftsmanship.", // historicalBackground
-                    "android.resource://" + getPackageName() + "/" + R.drawable.karakou, // imageUrl
+                    String.valueOf(R.drawable.karakou), // imageUrl as resource id string
                     "karakou", // videoUrl
                     null, // audioUrl
                     "Algiers, Constantine, Oran", // region
@@ -91,7 +91,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Burnous", // title
                     "The Burnous is a traditional woolen cloak worn by Algerian men, especially in rural areas. It is known for its warmth and distinctive hood.", // description
                     "The Burnous has been worn in North Africa for centuries, with its design influenced by both Berber and Arab cultures. It was traditionally made from camel or sheep wool.", // historicalBackground
-                    "android.resource://" + getPackageName() + "/" + R.drawable.burnous, // imageUrl
+                    String.valueOf(R.drawable.burnous), // imageUrl as resource id string
                     "burnous", // videoUrl
                     null, // audioUrl
                     "Kabylie, Aurès, Sahara", // region
@@ -122,7 +122,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Eid al-Fitr", // title
                     "Eid al-Fitr is a major Islamic festival marking the end of Ramadan. In Algeria, it is celebrated with special prayers, family gatherings, and traditional foods.", // description
                     "Eid al-Fitr has been celebrated in Algeria for centuries, with traditions passed down through generations. It represents the culmination of a month of fasting and spiritual reflection.", // historicalBackground
-                    "android.resource://" + getPackageName() + "/" + R.drawable.eid, // imageUrl
+                    String.valueOf(R.drawable.eid), // imageUrl as resource id string
                     "eid", // videoUrl
                     null, // audioUrl
                     "Throughout Algeria", // region
@@ -151,7 +151,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "Yennayer", // title
                     "Yennayer is the Amazigh (Berber) New Year celebration, marking the beginning of the agricultural year. It is celebrated with traditional foods and cultural events.", // description
                     "Yennayer has been celebrated for over 2000 years in North Africa. It represents the Amazigh calendar and agricultural traditions.", // historicalBackground
-                    "android.resource://" + getPackageName() + "/" + R.drawable.yennayer, // imageUrl
+                    String.valueOf(R.drawable.yennayer), // imageUrl as resource id string
                     "yennayer", // videoUrl
                     null, // audioUrl
                     "Kabylie, Aurès, M'zab", // region
@@ -210,6 +210,93 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                         "Tajine",
                         "Chorba",
                         "Merguez"
+                    }
+                ));
+                break;
+            case 4: // Marriage Customs
+                traditions.add(new Tradition(
+                    6, // id
+                    "El Khouara (Henna Night)",
+                    "El Khouara is the traditional Algerian henna night, celebrated before the wedding ceremony. It is a festive gathering where the bride is adorned with henna and surrounded by family and friends.",
+                    "Henna night is a centuries-old custom in Algeria, symbolizing beauty, joy, and blessings for the bride. The ritual includes singing, dancing, and the application of intricate henna designs.",
+                    String.valueOf(R.drawable.henna_night), // imageUrl as resource id string
+                    null, // videoUrl
+                    null, // audioUrl
+                    "Throughout Algeria",
+                    "Wedding Eve",
+                    new String[]{
+                        "Henna paste",
+                        "Traditional dresses",
+                        "Sweets and pastries",
+                        "Musical instruments"
+                    },
+                    new String[]{
+                        "Preparation of henna paste",
+                        "Gathering of women",
+                        "Application of henna designs",
+                        "Singing and dancing",
+                        "Blessings and gift-giving"
+                    },
+                    new String[]{
+                        "Wedding Ceremony",
+                        "Engagement Party",
+                        "Aroussa Preparation"
+                    }
+                ));
+                break;
+            case 5: // Historical Landmarks
+                traditions.add(new Tradition(
+                    7, // id
+                    "Casbah of Algiers",
+                    "The Casbah is the historic medina of Algiers, a UNESCO World Heritage Site known for its labyrinthine streets, whitewashed houses, and rich history.",
+                    "The Casbah dates back to the 10th century and has witnessed centuries of Algerian history, from Berber dynasties to Ottoman rule and the fight for independence.",
+                    String.valueOf(R.drawable.casbah_algiers), // imageUrl as resource id string
+                    null, // videoUrl
+                    null, // audioUrl
+                    "Algiers",
+                    "All year",
+                    new String[]{
+                        "Stone-paved alleys",
+                        "Traditional houses",
+                        "Historic mosques",
+                        "Artisan workshops"
+                    },
+                    new String[]{
+                        "Guided walking tour",
+                        "Visit to historic sites",
+                        "Exploring artisan shops",
+                        "Tasting local foods"
+                    },
+                    new String[]{
+                        "Ketchaoua Mosque",
+                        "Palace of the Dey",
+                        "Martyrs' Square"
+                    }
+                ));
+                break;
+            case 6: // Popular Sayings and Proverbs
+                traditions.add(new Tradition(
+                    8, // id
+                    "Man sabara zafira",
+                    "A popular Algerian proverb meaning 'He who is patient, succeeds.' It highlights the value of patience and perseverance in Algerian culture.",
+                    "This proverb has been passed down through generations, reflecting the importance of endurance and hope in Algerian society.",
+                    String.valueOf(R.drawable.proverb_patience), // imageUrl as resource id string
+                    null, // videoUrl
+                    null, // audioUrl
+                    "Throughout Algeria",
+                    "All year",
+                    new String[]{
+                        "Oral tradition"
+                    },
+                    new String[]{
+                        "Storytelling",
+                        "Sharing wisdom in gatherings",
+                        "Teaching children life lessons"
+                    },
+                    new String[]{
+                        "Other proverbs",
+                        "Popular sayings",
+                        "Folk tales"
                     }
                 ));
                 break;
