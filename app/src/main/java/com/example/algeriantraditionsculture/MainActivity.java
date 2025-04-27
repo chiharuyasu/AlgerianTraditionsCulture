@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     private RecyclerView categoriesRecyclerView;
     private CategoryAdapter categoryAdapter;
     private List<Category> categories;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
         // Initialize views
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView);
+        // Initialize search view
+        searchView = findViewById(R.id.searchView);
+        // Make SearchView expand when tapping anywhere
+        searchView.setOnClickListener(v -> searchView.setIconified(false));
 
         // Initialize categories list
         categories = new ArrayList<>();
@@ -38,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
         // Load categories
         loadCategories();
+
+        setupSearchSystem();
     }
 
     private void setupRecyclerView() {
@@ -63,6 +71,33 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         categoryAdapter.setCategories(categories);
     }
 
+    private void setupSearchSystem() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterCategories(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterCategories(newText);
+                return true;
+            }
+        });
+    }
+
+    private void filterCategories(String query) {
+        List<Category> filteredList = new ArrayList<>();
+        for (Category category : categories) {
+            if (category.getName().toLowerCase().contains(query.toLowerCase()) ||
+                category.getDescription().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(category);
+            }
+        }
+        categoryAdapter.setCategories(filteredList);
+    }
+
     @Override
     public void onCategoryClick(Category category) {
         Intent intent = new Intent(this, CategoryDetailActivity.class);
@@ -74,14 +109,9 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        // Add search icon click logic
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        if (searchItem != null) {
-            searchItem.setOnMenuItemClickListener(item -> {
-                Toast.makeText(this, "Search system coming soon!", Toast.LENGTH_SHORT).show();
-                return true;
-            });
-        }
+        searchView = (SearchView) searchItem.getActionView();
+        setupSearchSystem();
         return true;
     }
 
