@@ -220,7 +220,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "El Khouara is the traditional Algerian henna night, celebrated before the wedding ceremony. It is a festive gathering where the bride is adorned with henna and surrounded by family and friends.",
                     "Henna night is a centuries-old custom in Algeria, symbolizing beauty, joy, and blessings for the bride. The ritual includes singing, dancing, and the application of intricate henna designs.",
                     String.valueOf(R.drawable.henna_night), // imageUrl as resource id string
-                    null, // videoUrl
+                    "henna_night", // videoUrl (add your video as res/raw/henna_night.mp4)
                     null, // audioUrl
                     "Throughout Algeria",
                     "Wedding Eve",
@@ -251,7 +251,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     "The Casbah is the historic medina of Algiers, a UNESCO World Heritage Site known for its labyrinthine streets, whitewashed houses, and rich history.",
                     "The Casbah dates back to the 10th century and has witnessed centuries of Algerian history, from Berber dynasties to Ottoman rule and the fight for independence.",
                     String.valueOf(R.drawable.casbah_algiers), // imageUrl as resource id string
-                    null, // videoUrl
+                    "casbah_algiers", // videoUrl (add your video as res/raw/casbah_algiers.mp4)
                     null, // audioUrl
                     "Algiers",
                     "All year",
@@ -274,29 +274,34 @@ public class CategoryDetailActivity extends AppCompatActivity implements Traditi
                     }
                 ));
                 break;
-            case 6: // Popular Sayings and Proverbs
+            case 6: // Algerian National Anthem
                 traditions.add(new Tradition(
                     8, // id
-                    "Man sabara zafira",
-                    "A popular Algerian proverb meaning 'He who is patient, succeeds.' It highlights the value of patience and perseverance in Algerian culture.",
-                    "This proverb has been passed down through generations, reflecting the importance of endurance and hope in Algerian society.",
+                    "Algerian National Anthem",
+                    "The national anthem of Algeria, 'Kassaman' (We Pledge), is a symbol of the country's independence and pride. It is played at official events and national celebrations.",
+                    "Written by Moufdi Zakaria in 1956 while imprisoned by French colonial authorities, and composed by Mohamed Fawzi, the anthem became the official anthem upon Algeria's independence in 1962.",
                     String.valueOf(R.drawable.proverb_patience), // imageUrl as resource id string
                     null, // videoUrl
                     null, // audioUrl
                     "Throughout Algeria",
                     "All year",
                     new String[]{
-                        "Oral tradition"
+                        "Lyrics by Moufdi Zakaria",
+                        "Music by Mohamed Fawzi",
+                        "Adopted in 1962 after independence",
+                        "Represents the struggle for freedom",
+                        "Officially titled 'Kassaman' (We Pledge)"
                     },
                     new String[]{
-                        "Storytelling",
-                        "Sharing wisdom in gatherings",
-                        "Teaching children life lessons"
+                        "Recitation of the anthem at national events",
+                        "Singing in schools and sports events",
+                        "Learning the anthem as part of civic education"
                     },
                     new String[]{
-                        "Other proverbs",
-                        "Popular sayings",
-                        "Folk tales"
+                        "Independence Day",
+                        "Algerian flag",
+                        "National celebrations",
+                        "Algerian Constitution"
                     }
                 ));
                 break;

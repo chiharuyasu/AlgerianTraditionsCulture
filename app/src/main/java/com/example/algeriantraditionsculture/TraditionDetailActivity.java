@@ -488,26 +488,31 @@ public class TraditionDetailActivity extends AppCompatActivity {
                 if (traditionId == 8) {
                     tradition = new Tradition(
                         8,
-                        "Man sabara zafira",
-                        "A popular Algerian proverb meaning 'He who is patient, succeeds.' It highlights the value of patience and perseverance in Algerian culture.",
-                        "This proverb has been passed down through generations, reflecting the importance of endurance and hope in Algerian society.",
+                        "Algerian National Anthem",
+                        "The national anthem of Algeria, 'Kassaman' (We Pledge), is a symbol of the country's independence and pride. It is played at official events and national celebrations.",
+                        "Written by Moufdi Zakaria in 1956 while imprisoned by French colonial authorities, and composed by Mohamed Fawzi, the anthem became the official anthem upon Algeria's independence in 1962.",
                         null,
                         "proverb_patience",
                         null,
                         "Throughout Algeria",
                         "All year",
                         new String[]{
-                            "Oral tradition"
+                            "Lyrics by Moufdi Zakaria",
+                            "Music by Mohamed Fawzi",
+                            "Adopted in 1962 after independence",
+                            "Represents the struggle for freedom",
+                            "Officially titled 'Kassaman' (We Pledge)"
                         },
                         new String[]{
-                            "Storytelling",
-                            "Sharing wisdom in gatherings",
-                            "Teaching children life lessons"
+                            "Recitation of the anthem at national events",
+                            "Singing in schools and sports events",
+                            "Learning the anthem as part of civic education"
                         },
                         new String[]{
-                            "Other proverbs",
-                            "Popular sayings",
-                            "Folk tales"
+                            "Independence Day",
+                            "Algerian flag",
+                            "National celebrations",
+                            "Algerian Constitution"
                         }
                     );
                 }

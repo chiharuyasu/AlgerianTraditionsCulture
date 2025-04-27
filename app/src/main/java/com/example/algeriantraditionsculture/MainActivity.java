@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.algeriantraditionsculture.adapter.CategoryAdapter;
 import com.example.algeriantraditionsculture.model.Category;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
 
@@ -25,7 +24,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
     private RecyclerView categoriesRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private FloatingActionButton fabSearch;
     private List<Category> categories;
     private SearchBar searchBar;
     private SearchView searchView;
@@ -37,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
         // Initialize views
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView);
-        fabSearch = findViewById(R.id.fabSearch);
         searchBar = findViewById(R.id.searchBar);
         searchView = findViewById(R.id.searchView);
 
@@ -46,11 +43,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
         // Setup RecyclerView
         setupRecyclerView();
-
-        // Setup FAB
-        fabSearch.setOnClickListener(v -> {
-            searchView.show();
-        });
 
         // Setup search functionality
         setupSearch();
